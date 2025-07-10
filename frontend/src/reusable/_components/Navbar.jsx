@@ -8,7 +8,9 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useLogoutUserMutation } from "@/featues/api/authApi";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +20,17 @@ const Navbar = () => {
     { name: "About", href: "/about" },
     { name: "Contact Us", href: "/contact" },
   ];
+
+  const { user } = useSelector((store) => store?.auth);
+
+  const [logoutUser] = useLogoutUserMutation();
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate("/sign-in");
+  };
 
   const logoVariants = {
     initial: { opacity: 0, x: -20 },
@@ -145,14 +158,28 @@ const Navbar = () => {
           whileTap="tap"
           className="hidden md:block"
         >
-          <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              Sign In
-            </motion.span>
-          </Button>
+          {!user ? (
+            <Link to="/sign-in">
+              <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Sign In
+                </motion.span>
+              </Button>
+            </Link>
+          ) : (
+            <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+              <motion.span
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+                onClick={handleLogout}
+              >
+                Logout
+              </motion.span>
+            </Button>
+          )}
         </motion.div>
 
         {/* Mobile Menu */}
@@ -198,10 +225,7 @@ const Navbar = () => {
                 {/* Mobile Logo */}
                 <motion.div variants={mobileItemVariants}>
                   <SheetClose asChild>
-                    <Link
-                      to="/"
-                      className="flex items-center space-x-2 group"
-                    >
+                    <Link to="/" className="flex items-center space-x-2 group">
                       <motion.div
                         className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg"
                         whileHover={{ rotate: 360, scale: 1.1 }}

@@ -98,3 +98,16 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+// controller for user logout
+export const userLogout = (_, res) => {
+  return res
+    .status(200)
+    .cookie("token", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 0,
+    })
+    .json({ success: true, message: "You just logged out" });
+};
