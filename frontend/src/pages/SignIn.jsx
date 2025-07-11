@@ -33,12 +33,9 @@ const SigninPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Login successful!", {
-        description: "You have been signed in to your account.",
-        duration: 3000,
-      });
+      toast.success("Login successful!");
       // Redirect or handle successful login
-      navigate("/"); // Change this to your desired redirect path
+      navigate("/dashboard");
     }
 
     if (error) {

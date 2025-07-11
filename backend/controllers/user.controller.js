@@ -99,6 +99,42 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// controller to get user profile details
+export const getUserProfileDetails = async (req, res) => {
+  try {
+    const userId = req.id;
+
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No user id was provided" });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 // controller for user logout
 export const userLogout = (_, res) => {
   return res

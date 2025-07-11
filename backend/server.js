@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRouter.js";
+import sleepRouter from "./routes/sleepRoute.js";
 
 // App Config
 const app = express();
@@ -45,6 +46,9 @@ app.get("/", (req, res) => {
 
 // user api end point
 app.use("/api/user", userRouter)
+
+// sleep record api end point
+app.use("/api/sleep", sleepRouter)
 
 const port = process.env.PORT || 4000;
 

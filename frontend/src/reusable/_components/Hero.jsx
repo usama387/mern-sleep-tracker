@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Moon, Stars, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const HeroSection = () => {
   const containerVariants = {
@@ -121,13 +123,15 @@ const HeroSection = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button
-                  size="lg"
-                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg"
-                >
-                  Start Tracking
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
+                <Link to="/dashboard">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 text-lg"
+                  >
+                    Start Tracking
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
               </motion.div>
 
               <motion.div
