@@ -42,6 +42,7 @@ import {
   useGetSleepRecordsQuery,
 } from "@/featues/api/sleepApi";
 import { toast } from "sonner";
+import SleepInsights from "@/reusable/_components/SleepInsights";
 
 const DashboardPage = () => {
   // state to hold sleep data
@@ -71,29 +72,35 @@ const DashboardPage = () => {
       return {
         formattedAverage: "No data",
         bestSleep: { hours: 0 },
-        worstSleep: { hours: 0 }
+        worstSleep: { hours: 0 },
       };
     }
 
     // Calculate average sleep hours
     const totalHours = sleepRecords.reduce((sum, rec) => sum + rec.hours, 0);
     const average = totalHours / sleepRecords.length;
-    
+
     const hrs = Math.floor(average);
     const mins = Math.round((average - hrs) * 60);
-    const formattedAverage = `${hrs} hour${hrs !== 1 ? "s" : ""} ${mins} minute${mins !== 1 ? "s" : ""}`;
+    const formattedAverage = `${hrs} hour${
+      hrs !== 1 ? "s" : ""
+    } ${mins} minute${mins !== 1 ? "s" : ""}`;
 
     // Find best and worst sleep records
-    const bestSleep = sleepRecords.reduce((best, rec) => 
-      rec.hours > best.hours ? rec : best, sleepRecords[0]);
-    
-    const worstSleep = sleepRecords.reduce((worst, rec) => 
-      rec.hours < worst.hours ? rec : worst, sleepRecords[0]);
+    const bestSleep = sleepRecords.reduce(
+      (best, rec) => (rec.hours > best.hours ? rec : best),
+      sleepRecords[0]
+    );
+
+    const worstSleep = sleepRecords.reduce(
+      (worst, rec) => (rec.hours < worst.hours ? rec : worst),
+      sleepRecords[0]
+    );
 
     return {
       formattedAverage,
       bestSleep,
-      worstSleep
+      worstSleep,
     };
   }, [sleepRecords]);
 
@@ -102,11 +109,13 @@ const DashboardPage = () => {
     if (!hours) return "No data";
     const hrs = Math.floor(hours);
     const mins = Math.round((hours - hrs) * 60);
-    
+
     if (mins === 0) {
       return `${hrs} hour${hrs !== 1 ? "s" : ""}`;
     }
-    return `${hrs} hour${hrs !== 1 ? "s" : ""} ${mins} minute${mins !== 1 ? "s" : ""}`;
+    return `${hrs} hour${hrs !== 1 ? "s" : ""} ${mins} minute${
+      mins !== 1 ? "s" : ""
+    }`;
   };
 
   const chartConfig = {
@@ -207,7 +216,7 @@ const DashboardPage = () => {
 
   const userData = user?.user || {};
 
-  if (recordsLoading) return <p>Loading chart...</p>;
+  if (recordsLoading) return <p>Loading charts...</p>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50/30">
@@ -471,6 +480,7 @@ const DashboardPage = () => {
                 </CardContent>
               </Card>
             </motion.div>
+            <SleepInsights sleepRecords={sleepRecords} />
           </div>
 
           {/* Right Column */}
@@ -593,7 +603,9 @@ const DashboardPage = () => {
                         Best Sleep
                       </Badge>
                       <p className="text-2xl font-bold text-green-600">
-                        {bestSleep?.hours ? formatHours(bestSleep.hours) : "No data"}
+                        {bestSleep?.hours
+                          ? formatHours(bestSleep.hours)
+                          : "No data"}
                       </p>
                       {bestSleep?.date && (
                         <p className="text-xs text-gray-500 mt-1">
@@ -606,7 +618,9 @@ const DashboardPage = () => {
                         Worst Sleep
                       </Badge>
                       <p className="text-2xl font-bold text-red-600">
-                        {worstSleep?.hours ? formatHours(worstSleep.hours) : "No data"}
+                        {worstSleep?.hours
+                          ? formatHours(worstSleep.hours)
+                          : "No data"}
                       </p>
                       {worstSleep?.date && (
                         <p className="text-xs text-gray-500 mt-1">
