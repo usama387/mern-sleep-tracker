@@ -162,7 +162,7 @@ const Navbar = () => {
           variants={buttonVariants}
           whileHover="hover"
           whileTap="tap"
-          className="hidden md:block"
+          className="hidden md:block items-center space-x-4"
         >
           {!user ? (
             <Link to="/sign-in">
@@ -175,14 +175,30 @@ const Navbar = () => {
                 </motion.span>
               </Button>
             </Link>
-          ) : (
-            <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+          ) : user?.role !== "DOCTOR" ? (
+            <Button
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={handleLogout}
+            >
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
-                onClick={handleLogout}
               >
                 Logout
+              </motion.span>
+            </Button>
+          ) : null}
+
+          {user?.role === "DOCTOR" && (
+            <Button
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={() => navigate("/doctor-panel")}
+            >
+              <motion.span
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                Proceed to Doctor Panel
               </motion.span>
             </Button>
           )}
@@ -267,7 +283,7 @@ const Navbar = () => {
                   ))}
                 </motion.nav>
 
-                {/* Mobile Sign In Button */}
+                {/* Mobile Menu Auth Buttons */}
                 <motion.div variants={mobileItemVariants}>
                   <SheetClose asChild>
                     <motion.div
@@ -285,14 +301,30 @@ const Navbar = () => {
                             </motion.span>
                           </Button>
                         </Link>
-                      ) : (
-                        <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                      ) : user?.role !== "DOCTOR" ? (
+                        <Button
+                          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                          onClick={handleLogout}
+                        >
                           <motion.span
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.2 }}
-                            onClick={handleLogout}
                           >
                             Logout
+                          </motion.span>
+                        </Button>
+                      ) : null}
+
+                      {user?.role === "DOCTOR" && (
+                        <Button
+                          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                          onClick={() => navigate("/doctor-panel")}
+                        >
+                          <motion.span
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            Proceed to Doctor Panel
                           </motion.span>
                         </Button>
                       )}
