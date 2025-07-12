@@ -90,6 +90,11 @@ const Navbar = () => {
     open: { opacity: 1, x: 0 },
   };
 
+  // to redirect user on top of the web page
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <motion.header
       initial="initial"
@@ -131,6 +136,7 @@ const Navbar = () => {
             >
               <Link
                 to={item.href}
+                onClick={handleNavClick}
                 className="relative text-sm font-medium text-gray-700 transition-colors hover:text-green-600 group"
               >
                 <motion.span
