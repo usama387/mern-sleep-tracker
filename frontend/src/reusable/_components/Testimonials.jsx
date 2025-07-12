@@ -12,7 +12,7 @@ const TestimonialsSection = () => {
 
   const testimonials = [
     {
-      name: "Sarah Johnson",
+      name: "Sarah Jameel",
       role: "Marketing Manager",
       avatar: "/placeholder.svg?height=60&width=60",
       rating: 5,
@@ -20,7 +20,7 @@ const TestimonialsSection = () => {
       improvement: "Sleep quality improved by 85%",
     },
     {
-      name: "Michael Chen",
+      name: "Syed Noor Uz Zaman Jillani",
       role: "Software Developer",
       avatar: "/placeholder.svg?height=60&width=60",
       rating: 5,
@@ -28,15 +28,15 @@ const TestimonialsSection = () => {
       improvement: "Energy levels increased by 70%",
     },
     {
-      name: "Emily Rodriguez",
-      role: "Fitness Instructor",
+      name: "Abdul Wasay",
+      role: "Instructor",
       avatar: "/placeholder.svg?height=60&width=60",
       rating: 5,
       text: "The detailed sleep analytics are incredible! Somnio showed me how my workout timing affected my sleep. Now I optimize both my fitness and rest for peak performance.",
       improvement: "Recovery time reduced by 40%",
     },
     {
-      name: "David Thompson",
+      name: "Aisha Saleem",
       role: "Business Owner",
       avatar: "/placeholder.svg?height=60&width=60",
       rating: 5,
@@ -44,7 +44,7 @@ const TestimonialsSection = () => {
       improvement: "Stress levels decreased by 60%",
     },
     {
-      name: "Lisa Park",
+      name: "Muhammad Affan",
       role: "Teacher",
       avatar: "/placeholder.svg?height=60&width=60",
       rating: 5,

@@ -4,6 +4,7 @@ import { Plus, Minus, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -12,7 +13,7 @@ const FAQSection = () => {
     {
       question: "How does Somnio track my sleep?",
       answer:
-        "Somnio uses advanced sensors and AI algorithms to monitor your sleep patterns, including movement, heart rate, and breathing. Simply place your device on your nightstand or wear our comfortable sleep tracker, and we'll do the rest while you sleep peacefully.",
+        "Somnio uses user data entered through the app and analyzes it with advanced AI algorithms and suggests best practices for imroving sleep.",
     },
     {
       question: "Is my sleep data secure and private?",
@@ -27,17 +28,12 @@ const FAQSection = () => {
     {
       question: "What devices are compatible with Somnio?",
       answer:
-        "Somnio works with iOS and Android smartphones, Apple Watch, Fitbit, and other popular wearables. You can also use our dedicated sleep tracking device for the most accurate results. All data syncs seamlessly across your devices.",
+        "Currently Somnio is avaialble on web but it if fully responsive and can be used on any device with a web browser. We are also working on mobile apps for iOS and Android, which will offer additional features like push notifications and sleep tracking integration. Additionally, Somnio can be installed once opened on mobile browser press on add to homescreen and install option it will then work as a mobile app without showing url address.",
     },
     {
       question: "How long does it take to see sleep improvements?",
       answer:
         "Most users notice improvements in their sleep awareness within the first week. Significant sleep quality improvements typically occur within 2-4 weeks of following our personalized recommendations. Remember, better sleep is a journey, not a destination.",
-    },
-    {
-      question: "Do I need to wear anything while sleeping?",
-      answer:
-        "Not necessarily! Somnio offers multiple tracking options. You can use our non-contact bedside device, wear a comfortable wristband, or simply place your phone nearby. Choose the method that feels most comfortable for your sleep routine.",
     },
   ];
 
@@ -162,6 +158,7 @@ const FAQSection = () => {
           <motion.div variants={itemVariants} className="text-center mt-12">
             <p className="text-gray-600 mb-6">Still have questions?</p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link to="/contact">
               <Button
                 variant="outline"
                 size="lg"
@@ -169,6 +166,7 @@ const FAQSection = () => {
               >
                 Contact Support
               </Button>
+              </Link>
             </motion.div>
           </motion.div>
         </motion.div>

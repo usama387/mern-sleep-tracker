@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -75,21 +76,21 @@ const ContactPage = () => {
     {
       icon: Mail,
       title: "Email Us",
-      content: "support@somnio.app",
+      content: "usamarazaaq3@gmail.com",
       description: "Get in touch via email",
       color: "from-blue-500 to-blue-600",
     },
     {
       icon: Phone,
       title: "Call Us",
-      content: "+1 (555) 123-SLEEP",
+      content: "923193507558",
       description: "Speak with our team",
       color: "from-green-500 to-green-600",
     },
     {
       icon: MapPin,
       title: "Visit Us",
-      content: "San Francisco, CA",
+      content: "Sports City Bahria Town,Karachi",
       description: "Our headquarters",
       color: "from-purple-500 to-purple-600",
     },
@@ -483,6 +484,7 @@ const ContactPage = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
+                <Link to="/">
                 <Button
                   variant="outline"
                   size="lg"
@@ -490,6 +492,7 @@ const ContactPage = () => {
                 >
                   View FAQ
                 </Button>
+                </Link>
               </motion.div>
             </motion.div>
           </motion.div>

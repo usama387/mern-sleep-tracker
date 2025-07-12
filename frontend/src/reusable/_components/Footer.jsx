@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
 
-const FooterSection=()=> {
+const FooterSection = () => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -31,7 +31,7 @@ const FooterSection=()=> {
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
@@ -72,54 +72,54 @@ const FooterSection=()=> {
 
   return (
     <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 text-white relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-32 h-32 border border-green-400 rounded-full" />
-        <div className="absolute top-32 right-20 w-24 h-24 border border-green-400 rounded-full" />
-        <div className="absolute bottom-20 left-1/4 w-40 h-40 border border-green-400 rounded-full" />
-        <div className="absolute bottom-40 right-1/3 w-20 h-20 border border-green-400 rounded-full" />
+      {/* Background Pattern - Hidden on smaller screens */}
+      <div className="absolute inset-0 opacity-5 hidden md:block">
+        <div className="absolute top-10 left-10 w-24 md:w-32 h-24 md:h-32 border border-green-400 rounded-full" />
+        <div className="absolute top-32 right-10 w-20 md:w-24 h-20 md:h-24 border border-green-400 rounded-full" />
+        <div className="absolute bottom-20 left-1/4 w-32 md:w-40 h-32 md:h-40 border border-green-400 rounded-full" />
+        <div className="absolute bottom-40 right-1/3 w-16 md:w-20 h-16 md:h-20 border border-green-400 rounded-full" />
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-50px" }}
         >
           {/* Main Footer Content */}
-          <div className="py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="py-8 sm:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
             {/* Brand Section */}
             <motion.div variants={itemVariants} className="lg:col-span-1">
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Logo */}
-                <Link href="/" className="flex items-center space-x-3 group">
+                <Link to="/" className="flex items-center space-x-3 group">
                   <motion.div
-                    className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg"
+                    className="flex items-center justify-center w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 shadow-lg"
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6, ease: "easeInOut" }}
                   >
-                    <Moon className="h-6 w-6 text-white" />
+                    <Moon className="h-5 sm:h-6 w-5 sm:w-6 text-white" />
                   </motion.div>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">
+                  <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">
                     Somnio
                   </span>
                 </Link>
 
-                <p className="text-gray-300 leading-relaxed">
+                <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
                   Transform your nights, elevate your days. The most advanced sleep tracking technology designed to help
                   you achieve perfect rest and peak performance.
                 </p>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
-                    <div className="text-xl font-bold text-green-400">50K+</div>
-                    <div className="text-xs text-gray-400">Happy Users</div>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="text-center p-2 sm:p-3 bg-white/5 rounded-lg backdrop-blur-sm">
+                    <div className="text-lg sm:text-xl font-bold text-green-400">50K+</div>
+                    <div className="text-xs sm:text-sm text-gray-400">Happy Users</div>
                   </div>
-                  <div className="text-center p-3 bg-white/5 rounded-lg backdrop-blur-sm">
-                    <div className="text-xl font-bold text-green-400">4.9★</div>
-                    <div className="text-xs text-gray-400">App Rating</div>
+                  <div className="text-center p-2 sm:p-3 bg-white/5 rounded-lg backdrop-blur-sm">
+                    <div className="text-lg sm:text-xl font-bold text-green-400">4.9★</div>
+                    <div className="text-xs sm:text-sm text-gray-400">App Rating</div>
                   </div>
                 </div>
               </div>
@@ -127,8 +127,8 @@ const FooterSection=()=> {
 
             {/* Quick Links */}
             <motion.div variants={itemVariants}>
-              <h3 className="text-lg font-semibold mb-6 text-green-400">Quick Links</h3>
-              <ul className="space-y-3">
+              <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-green-400">Quick Links</h3>
+              <ul className="space-y-2 sm:space-y-3">
                 {quickLinks.map((link, index) => (
                   <motion.li
                     key={link.name}
@@ -139,7 +139,7 @@ const FooterSection=()=> {
                   >
                     <Link
                       to={link.href}
-                      className="text-gray-300 hover:text-green-400 transition-colors duration-200 flex items-center group"
+                      className="text-gray-300 hover:text-green-400 transition-colors duration-200 flex items-center group text-sm sm:text-base"
                     >
                       <motion.span whileHover={{ x: 5 }} transition={{ duration: 0.2 }} className="flex items-center">
                         <ArrowRight className="w-3 h-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -153,8 +153,8 @@ const FooterSection=()=> {
 
             {/* Support */}
             <motion.div variants={itemVariants}>
-              <h3 className="text-lg font-semibold mb-6 text-green-400">Support</h3>
-              <ul className="space-y-3">
+              <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-green-400">Support</h3>
+              <ul className="space-y-2 sm:space-y-3">
                 {supportLinks.map((link, index) => (
                   <motion.li
                     key={link.name}
@@ -165,7 +165,7 @@ const FooterSection=()=> {
                   >
                     <Link
                       to={link.href}
-                      className="text-gray-300 hover:text-green-400 transition-colors duration-200 flex items-center group"
+                      className="text-gray-300 hover:text-green-400 transition-colors duration-200 flex items-center group text-sm sm:text-base"
                     >
                       <motion.span whileHover={{ x: 5 }} transition={{ duration: 0.2 }} className="flex items-center">
                         <ArrowRight className="w-3 h-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -177,58 +177,58 @@ const FooterSection=()=> {
               </ul>
 
               {/* Contact Info */}
-              <div className="mt-8 space-y-3">
+              <div className="mt-6 sm:mt-8 space-y-2 sm:space-y-3">
                 <div className="flex items-center space-x-3 text-gray-300">
-                  <Mail className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">support@somnio.app</span>
+                  <Mail className="w-4 h-4 text-green-400 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm">support@somnio.app</span>
                 </div>
                 <div className="flex items-center space-x-3 text-gray-300">
-                  <Phone className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">+1 (555) 123-SLEEP</span>
+                  <Phone className="w-4 h-4 text-green-400 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm">+1 (555) 123-SLEEP</span>
                 </div>
                 <div className="flex items-center space-x-3 text-gray-300">
-                  <Clock className="w-4 h-4 text-green-400" />
-                  <span className="text-sm">24/7 Support</span>
+                  <Clock className="w-4 h-4 text-green-400 flex-shrink-0" />
+                  <span className="text-xs sm:text-sm">24/7 Support</span>
                 </div>
               </div>
             </motion.div>
 
             {/* Newsletter */}
             <motion.div variants={itemVariants}>
-              <h3 className="text-lg font-semibold mb-6 text-green-400">Stay Updated</h3>
-              <p className="text-gray-300 mb-6 text-sm">
+              <h3 className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-green-400">Stay Updated</h3>
+              <p className="text-gray-300 mb-4 sm:mb-6 text-xs sm:text-sm">
                 Get the latest sleep tips, app updates, and exclusive content delivered to your inbox.
               </p>
 
               <div className="space-y-4">
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-2">
                   <Input
                     type="email"
                     placeholder="Enter your email"
-                    className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-400"
+                    className="bg-white/10 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-400 text-sm sm:text-base"
                   />
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                    <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6">
+                    <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 sm:px-6 text-sm sm:text-base">
                       Subscribe
                     </Button>
                   </motion.div>
                 </div>
 
                 <div className="flex items-center space-x-2 text-xs text-gray-400">
-                  <Shield className="w-3 h-3" />
+                  <Shield className="w-3 h-3 flex-shrink-0" />
                   <span>We respect your privacy. Unsubscribe anytime.</span>
                 </div>
               </div>
 
               {/* Social Links */}
-              <div className="mt-8">
-                <h4 className="text-sm font-medium mb-4 text-gray-300">Follow Us</h4>
-                <div className="flex space-x-3">
+              <div className="mt-6 sm:mt-8">
+                <h4 className="text-sm font-medium mb-3 sm:mb-4 text-gray-300">Follow Us</h4>
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {socialLinks.map((social, index) => (
                     <motion.a
                       key={social.label}
                       href={social.href}
-                      className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-green-500 transition-all duration-300"
+                      className="w-8 sm:w-10 h-8 sm:h-10 bg-white/10 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-green-500 transition-all duration-300"
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.9 }}
                       initial={{ opacity: 0, y: 20 }}
@@ -246,20 +246,20 @@ const FooterSection=()=> {
           </div>
 
           {/* Bottom Section */}
-          <motion.div variants={itemVariants} className="border-t border-gray-700 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <motion.div variants={itemVariants} className="border-t border-gray-700 py-6 sm:py-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
               {/* Developer Credit */}
               <div className="flex items-center space-x-2 text-gray-300">
-                <span className="text-sm">Crafted with</span>
+                <span className="text-xs sm:text-sm">Crafted with</span>
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
                 >
                   <Heart className="w-4 h-4 text-red-500 fill-current" />
                 </motion.div>
-                <span className="text-sm">by</span>
+                <span className="text-xs sm:text-sm">by</span>
                 <motion.span
-                  className="font-semibold text-green-400 hover:text-green-300 transition-colors duration-200"
+                  className="font-semibold text-green-400 hover:text-green-300 transition-colors duration-200 text-xs sm:text-sm"
                   whileHover={{ scale: 1.05 }}
                 >
                   Usama Razaaq
@@ -268,7 +268,7 @@ const FooterSection=()=> {
               </div>
 
               {/* Legal Links */}
-              <div className="flex flex-wrap items-center space-x-6 text-sm text-gray-400">
+              <div className="flex flex-wrap justify-center sm:justify-end gap-3 sm:gap-6 text-xs sm:text-sm text-gray-400">
                 {legalLinks.map((link, index) => (
                   <motion.div
                     key={link.name}
@@ -291,21 +291,21 @@ const FooterSection=()=> {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="text-center mt-6 pt-6 border-t border-gray-700"
+              className="text-center mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-700"
             >
-              <p className="text-sm text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-400">
                 © {new Date().getFullYear()} Somnio. All rights reserved.
-                <span className="mx-2">•</span>
-                Transforming sleep, one night at a time.
+                <span className="mx-2 hidden sm:inline">•</span>
+                <span className="block sm:inline">Transforming sleep, one night at a time.</span>
               </p>
             </motion.div>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Floating Elements */}
+      {/* Floating Elements - Hidden on smaller screens */}
       <motion.div
-        className="absolute top-20 right-10 w-2 h-2 bg-green-400 rounded-full opacity-60"
+        className="absolute top-20 right-10 w-2 h-2 bg-green-400 rounded-full opacity-60 hidden md:block"
         animate={{
           y: [-20, 20, -20],
           opacity: [0.6, 1, 0.6],
@@ -317,7 +317,7 @@ const FooterSection=()=> {
         }}
       />
       <motion.div
-        className="absolute bottom-40 left-20 w-1 h-1 bg-green-500 rounded-full opacity-40"
+        className="absolute bottom-40 left-20 w-1 h-1 bg-green-500 rounded-full opacity-40 hidden md:block"
         animate={{
           y: [-10, 10, -10],
           opacity: [0.4, 0.8, 0.4],
