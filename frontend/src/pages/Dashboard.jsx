@@ -46,8 +46,10 @@ import SleepInsights from "@/reusable/_components/SleepInsights";
 
 const DashboardPage = () => {
   // user state from auth slice
-  const { user, loading } = useSelector((store) => store?.auth);
+  const { user } = useSelector((store) => store?.auth);
 
+  const userId = user?.id;
+  
   const userData = user || {};
 
   // state to hold sleep data
@@ -66,8 +68,9 @@ const DashboardPage = () => {
     data: records,
     isLoading: recordsLoading,
     refetch,
-  } = useGetSleepRecordsQuery(undefined, {
-    skip: !user, // Skip if user not available
+  } = useGetSleepRecordsQuery(userId, {
+    skip: !userId, // Skip if no user ID
+    refetchOnMountOrArgChange: true, // Important for immediate refetch
   });
 
   // Fallback to empty array if no records are available
