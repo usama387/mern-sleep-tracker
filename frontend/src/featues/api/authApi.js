@@ -1,4 +1,4 @@
-import { userLoggedIn, userLoggedOut } from "@/redux/authSlice";
+import { setAuthLoading, userLoggedIn, userLoggedOut } from "@/redux/authSlice";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const backendUrl = import.meta.env.VITE_AUTH_BACKEND_URL;
@@ -26,10 +26,14 @@ export const authApi = createApi({
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
+          dispatch(setAuthLoading(true));
           const { data } = await queryFulfilled;
           dispatch(userLoggedIn({ user: data.user }));
         } catch (error) {
           console.error("Login failed:", error);
+          dispatch(setAuthLoading(false));
+        } finally {
+          dispatch(setAuthLoading(false));
         }
       },
     }),
@@ -40,6 +44,7 @@ export const authApi = createApi({
       }),
       async onQueryStarted(_, { queryFulfilled, dispatch }) {
         try {
+          await queryFulfilled;
           dispatch(userLoggedOut());
         } catch (error) {
           console.log(error);

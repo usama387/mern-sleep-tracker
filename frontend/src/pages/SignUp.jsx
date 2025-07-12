@@ -46,12 +46,13 @@ const SignupPage = () => {
     }
 
     if (error) {
-      const errorMessage = error.data?.message || "Registration failed. Please try again.";
+      const errorMessage =
+        error.data?.message || "Registration failed. Please try again.";
       toast.error("Registration Error", {
         description: errorMessage,
         duration: 5000,
       });
-      
+
       // Set form errors if available
       if (error.data?.errors) {
         setErrors(error.data.errors);
@@ -213,11 +214,6 @@ const SignupPage = () => {
               </span>
             </Link>
 
-            <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">
-              <Heart className="w-3 h-3 mr-1" />
-              Join Our Community
-            </Badge>
-
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
                 Create Your{" "}
@@ -256,7 +252,7 @@ const SignupPage = () => {
                     <p className="text-gray-600 mb-6">
                       Welcome to Somnio! Please login to continue.
                     </p>
-                    <Button 
+                    <Button
                       onClick={() => navigate("/sign-in")}
                       className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 py-6 text-lg"
                     >

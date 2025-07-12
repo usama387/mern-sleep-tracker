@@ -45,6 +45,11 @@ import { toast } from "sonner";
 import SleepInsights from "@/reusable/_components/SleepInsights";
 
 const DashboardPage = () => {
+  // user state from auth slice
+  const { user, loading } = useSelector((store) => store?.auth);
+
+  const userData = user || {};
+
   // state to hold sleep data
   const [sleepData, setSleepData] = useState({
     quality: "",
@@ -61,7 +66,9 @@ const DashboardPage = () => {
     data: records,
     isLoading: recordsLoading,
     refetch,
-  } = useGetSleepRecordsQuery();
+  } = useGetSleepRecordsQuery(undefined, {
+    skip: !user, // Skip if user not available
+  });
 
   // Fallback to empty array if no records are available
   const sleepRecords = records?.records || [];
@@ -211,12 +218,6 @@ const DashboardPage = () => {
       transition: { duration: 0.5, ease: "easeOut" },
     },
   };
-
-  const { user } = useSelector((store) => store?.auth);
-
-  const userData = user?.user || {};
-
-  if (recordsLoading) return <p>Loading charts...</p>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50/30">

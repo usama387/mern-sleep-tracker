@@ -16,11 +16,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "@/featues/api/authApi";
+import { useDispatch } from "react-redux";
+import { setAuthLoading } from "@/redux/authSlice";
 
 const SigninPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,13 +32,28 @@ const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const [loginUser, { isLoading, isSuccess, error }] = useLoginUserMutation();
+  const [loginUser, { data, isLoading, isSuccess, error }] =
+    useLoginUserMutation();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Login successful!");
-      // Redirect or handle successful login
-      navigate("/dashboard");
+      toast.success(`Welcome back ${data.user.name}!`);
+
+      // Set temporary loading state
+      dispatch(setAuthLoading(true));
+
+      // Redirect to the original intended page or home
+      const from = location.state?.from || "/";
+      navigate(from, { replace: true });
+
+      // Allow time for Redux store update
+      setTimeout(() => {
+        const from = location.state?.from || "/";
+        navigate(from, { replace: true });
+        dispatch(setAuthLoading(false));
+      }, 100);
     }
 
     if (error) {
@@ -51,7 +69,7 @@ const SigninPage = () => {
         setErrors(error.data.errors);
       }
     }
-  }, [isSuccess, error, navigate]);
+  }, [isSuccess, error, navigate, location]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -181,11 +199,6 @@ const SigninPage = () => {
                 Somnio
               </span>
             </Link>
-
-            <Badge className="bg-green-100 text-green-700 hover:bg-green-200 mb-4">
-              <LogIn className="w-3 h-3 mr-1" />
-              Welcome Back
-            </Badge>
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">

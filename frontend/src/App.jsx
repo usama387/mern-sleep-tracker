@@ -15,15 +15,14 @@ const App = () => {
   // state from redux to access user information for authentication
   const { user, loading } = useSelector((store) => store?.auth);
 
-  if (loading) {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <Loader2 className="w-8 h-8 animate-spin text-green-500 mb-2" />
-      <p className="text-green-500 font-semibold">Just a moment...</p>
-    </div>
-  );
-}
-
+  // if (loading) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center h-screen">
+  //       <Loader2 className="w-8 h-8 animate-spin text-green-500 mb-2" />
+  //       <p className="text-green-500 font-semibold">Just a moment...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="">
@@ -36,7 +35,13 @@ const App = () => {
         <Route path="/sign-in" element={<SigninPage />} />
         <Route
           path="/dashboard"
-          element={user ? <DashboardPage /> : <Navigate to="/" replace />}
+          element={
+            user ? (
+              <DashboardPage />
+            ) : (
+              <Navigate to="/sign-in" state={{ from: "/dashboard" }} replace />
+            )
+          }
         />
       </Routes>
       <FooterSection />
