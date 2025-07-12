@@ -6,15 +6,13 @@ import {
   Lock,
   Eye,
   EyeOff,
-  LogIn,
+  ArrowRight,
   Moon,
   Shield,
-  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "@/featues/api/authApi";
@@ -24,22 +22,37 @@ import { setAuthLoading } from "@/redux/authSlice";
 const SigninPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+  
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
+  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loginUser, { data, isLoading, isSuccess, error }] = useLoginUserMutation();
 
-  const [loginUser, { data, isLoading, isSuccess, error }] =
-    useLoginUserMutation();
+  // Load saved email from localStorage on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setFormData((prev) => ({ ...prev, email: savedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
 
-  const dispatch = useDispatch();
-
+  // Handle login success or error
   useEffect(() => {
     if (isSuccess) {
       toast.success(`Welcome back ${data.user.name}!`);
+
+      // Save email to localStorage if "Remember Me" is checked
+      if (rememberMe) {
+        localStorage.setItem("rememberedEmail", formData.email.trim().toLowerCase());
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
 
       // Set temporary loading state
       dispatch(setAuthLoading(true));
@@ -50,15 +63,12 @@ const SigninPage = () => {
 
       // Allow time for Redux store update
       setTimeout(() => {
-        const from = location.state?.from || "/";
-        navigate(from, { replace: true });
         dispatch(setAuthLoading(false));
       }, 100);
     }
 
     if (error) {
-      const errorMessage =
-        error.data?.message || "Login failed. Please try again.";
+      const errorMessage = error.data?.message || "Login failed. Please try again.";
       toast.error("Login Error", {
         description: errorMessage,
         duration: 5000,
@@ -69,7 +79,7 @@ const SigninPage = () => {
         setErrors(error.data.errors);
       }
     }
-  }, [isSuccess, error, navigate, location]);
+  }, [isSuccess, error, navigate, location, formData.email, rememberMe, dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,6 +94,10 @@ const SigninPage = () => {
         [name]: "",
       }));
     }
+  };
+
+  const handleRememberMeChange = (e) => {
+    setRememberMe(e.target.checked);
   };
 
   const handleSubmit = async (e) => {
@@ -183,7 +197,6 @@ const SigninPage = () => {
         >
           {/* Header */}
           <motion.div variants={itemVariants} className="text-center">
-            {/* Logo */}
             <Link
               to="/"
               className="inline-flex items-center space-x-3 group mb-8"
@@ -299,11 +312,13 @@ const SigninPage = () => {
                     )}
                   </div>
 
-                  {/* Remember Me & Forgot Password */}
+                  {/* Remember Me */}
                   <div className="flex items-center justify-between">
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
                         type="checkbox"
+                        checked={rememberMe}
+                        onChange={handleRememberMeChange}
                         className="w-4 h-4 text-green-600 border-green-300 rounded focus:ring-green-500 focus:ring-2"
                       />
                       <span className="text-sm text-gray-600">Remember me</span>

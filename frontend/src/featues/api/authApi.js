@@ -79,19 +79,6 @@ export const authApi = createApi({
         }
       },
     }),
-    sendMessage: builder.mutation({
-      query: (formData) => ({
-        url: "/send-message",
-        method: "POST",
-        body: formData,
-      }),
-    }),
-    getUserMessages: builder.query({
-      query: () => ({
-        url: "/get-messages",
-        method: "GET",
-      }),
-    }),
   }),
 });
 
@@ -99,6 +86,5 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useLogoutUserMutation,
-  useSendMessageMutation,
-  useGetUserMessagesQuery,
+  useGetUserProfileDetailsQuery,
 } = authApi;

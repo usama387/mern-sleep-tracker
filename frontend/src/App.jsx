@@ -9,20 +9,10 @@ import { useSelector } from "react-redux";
 import SignupPage from "./pages/SignUp";
 import SigninPage from "./pages/SignIn";
 import DashboardPage from "./pages/Dashboard";
-import { Loader2 } from "lucide-react";
 
 const App = () => {
   // state from redux to access user information for authentication
-  const { user, loading } = useSelector((store) => store?.auth);
-
-  // if (loading) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center h-screen">
-  //       <Loader2 className="w-8 h-8 animate-spin text-green-500 mb-2" />
-  //       <p className="text-green-500 font-semibold">Just a moment...</p>
-  //     </div>
-  //   );
-  // }
+  const { user } = useSelector((store) => store?.auth);
 
   return (
     <div className="">
