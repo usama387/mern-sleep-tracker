@@ -268,9 +268,28 @@ const Navbar = () => {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Button className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 py-3 text-lg">
-                        Sign In
-                      </Button>
+                      {!user ? (
+                        <Link to="/sign-in">
+                          <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                            <motion.span
+                              whileHover={{ scale: 1.05 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              Sign In
+                            </motion.span>
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300">
+                          <motion.span
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={handleLogout}
+                          >
+                            Logout
+                          </motion.span>
+                        </Button>
+                      )}
                     </motion.div>
                   </SheetClose>
                 </motion.div>
