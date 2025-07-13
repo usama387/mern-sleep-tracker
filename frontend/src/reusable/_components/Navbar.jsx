@@ -192,7 +192,7 @@ const Navbar = () => {
           {user?.role === "DOCTOR" && (
             <Button
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-              onClick={() => navigate("/doctor-panel")}
+              onClick={() => navigate("/doctor")}
             >
               <motion.span
                 whileHover={{ scale: 1.05 }}
@@ -318,7 +318,7 @@ const Navbar = () => {
                       {user?.role === "DOCTOR" && (
                         <Button
                           className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                          onClick={() => navigate("/doctor-panel")}
+                          onClick={() => navigate("/doctor")}
                         >
                           <motion.span
                             whileHover={{ scale: 1.05 }}

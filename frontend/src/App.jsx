@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import SignupPage from "./pages/SignUp";
 import SigninPage from "./pages/SignIn";
 import DashboardPage from "./pages/Dashboard";
-import DoctorPanel from "./pages/DoctorPanel";
+import DoctorDashboard from "./pages/DoctorDashboard";
 
 const App = () => {
   // state from redux to access user information for authentication
@@ -30,7 +30,7 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/sign-in" element={<SigninPage />} />
-        <Route path="/doctor-panel" element={<DoctorPanel />} />
+        <Route path="/doctor" element={<DoctorDashboard />} />
         <Route
           path="/dashboard"
           element={

@@ -62,7 +62,7 @@ import { useLogoutUserMutation } from "@/featues/api/authApi";
 import { useGetAllUsersSleepRecordsQuery } from "@/featues/api/sleepApi";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const DoctorPanel = () => {
+const DoctorDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -961,4 +961,4 @@ const DoctorPanel = () => {
   );
 };
 
-export default DoctorPanel;
+export default DoctorDashboard;
