@@ -85,3 +85,73 @@ export const getUserSleepRecords = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
+// New controller to get all patients with sleep records
+export const getPatientsWithRecords = async (req, res) => {
+  try {
+    const userId = req.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Only authrorized doctors can access this data",
+      });
+    }
+
+    const patients = await prisma.user.findMany({
+      where: { role: "PATIENT" },
+      include: {
+        record: {
+          orderBy: { date: "desc" },
+          take: 7, // Get last 7 records
+        },
+      },
+    });
+
+    const patientsWithStats = patients.map((patient) => {
+      const records = patient.record || [];
+
+      // Calculate average sleep
+      const totalSleep = records.reduce((sum, r) => sum + r.amount, 0);
+      const avgSleep = records.length > 0 ? totalSleep / records.length : 0;
+
+      const formattedRecords = records
+        .map((r) => {
+          const jsDate = new Date(r.date);
+          return {
+            date: jsDate.toLocaleDateString("en-US", { weekday: "short" }), // Sat, Sun, etc.
+            day: jsDate.toLocaleDateString("en-US", { weekday: "long" }), // Saturday, Sunday, etc.
+            hours: r.amount,
+          };
+        })
+        .reverse(); // Oldest to newest
+
+      return {
+        id: patient.id,
+        name: patient.name,
+        email: patient.email,
+        avgSleep: Number(avgSleep.toFixed(1)),
+        sleepGoal: 8, // optionally fetch from a profile/settings table
+        alerts: records.filter((r) => r.amount < 5).length, // example rule
+        lastActive: `${Math.floor(
+          (Date.now() - new Date(patient.updatedAt)) / (1000 * 60)
+        )} minutes ago`,
+        status:
+          avgSleep >= 7.5
+            ? "excellent"
+            : avgSleep >= 6.5
+            ? "good"
+            : avgSleep >= 5.5
+            ? "warning"
+            : "critical",
+        sleepRecords: formattedRecords,
+      };
+    });
+
+    res.status(200).json(patientsWithStats);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching patients", error: error.message });
+  }
+};
