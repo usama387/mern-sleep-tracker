@@ -34,7 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
   ChartContainer,
   ChartTooltip,
@@ -61,6 +61,7 @@ import { useSelector } from "react-redux";
 import { useLogoutUserMutation } from "@/featues/api/authApi";
 import { useGetAllUsersSleepRecordsQuery } from "@/featues/api/sleepApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const DoctorDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
