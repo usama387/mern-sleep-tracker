@@ -26,7 +26,18 @@ export const sleepApi = createApi({
       }),
       providesTags: ["SleepRecords"],
     }),
+    getAllUsersSleepRecords: builder.query({
+      query: () => ({
+        url: "/all-users-record",
+        method: "GET",
+      }),
+      providesTags: ["SleepRecords"],
+    }),
   }),
 });
 
-export const { useAddSleepRecordMutation, useGetSleepRecordsQuery } = sleepApi;
+export const {
+  useAddSleepRecordMutation,
+  useGetSleepRecordsQuery,
+  useGetAllUsersSleepRecordsQuery,
+} = sleepApi;
