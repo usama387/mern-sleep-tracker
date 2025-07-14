@@ -15,6 +15,13 @@ export const addSleepRecord = async (req, res) => {
 
     const { quality, date, sleepStart, sleepEnd, issue } = req.body;
 
+    if (!quality || !date || !sleepStart || !sleepEnd) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields",
+      });
+    }
+
     // Convert time strings to Date objects
     const sleepStartDate = new Date(`${date}T${sleepStart}`);
     const sleepEndDate = new Date(`${date}T${sleepEnd}`);

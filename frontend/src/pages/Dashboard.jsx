@@ -183,8 +183,8 @@ const DashboardPage = () => {
     setIsSubmitting(true);
 
     // Validate inputs
-    if (!sleepData.sleepStart || !sleepData.sleepEnd) {
-      toast.error("Please select both sleep and wake times");
+    if (!sleepData.sleepStart || !sleepData.sleepEnd || !sleepData.quality || !sleepData.date) {
+      toast.error("Please fill in all fields first");
       setIsSubmitting(false);
       return;
     }
