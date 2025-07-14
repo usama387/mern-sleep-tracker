@@ -13,24 +13,30 @@ export const addSleepRecord = async (req, res) => {
       });
     }
 
-    const { quality, date, hours, issue } = req.body;
+    const { quality, date, sleepStart, sleepEnd, issue } = req.body;
 
-    // Validate required fields
-    if (!quality || !date || !hours || !Array.isArray(hours)) {
-      return res.status(400).json({
-        success: false,
-        message: "Missing or invalid required fields",
-      });
+    // Convert time strings to Date objects
+    const sleepStartDate = new Date(`${date}T${sleepStart}`);
+    const sleepEndDate = new Date(`${date}T${sleepEnd}`);
+
+    // Handle overnight sleep
+    if (sleepEndDate < sleepStartDate) {
+      sleepEndDate.setDate(sleepEndDate.getDate() + 1);
     }
 
-    // now create the record
+    // Calculate duration in hours
+    const hours = (sleepEndDate - sleepStartDate) / (1000 * 60 * 60);
+
+    // Create record with new fields
     const newRecord = await prisma.record.create({
       data: {
         text: quality,
-        amount: hours[0],
+        amount: hours,
         date: new Date(date),
+        sleepStart: sleepStartDate,
+        sleepEnd: sleepEndDate,
         issue: ["poor", "terrible"].includes(quality) ? issue : null,
-        userId, //for relationship with record
+        userId,
       },
     });
 
@@ -57,21 +63,43 @@ export const getUserSleepRecords = async (req, res) => {
       });
     }
 
-    // Fetch all sleep records for the user
+    // Fetch all sleep records for the user with all needed fields
     const records = await prisma.record.findMany({
       where: { userId },
       orderBy: { date: "desc" },
       take: 7,
+      select: {
+        id: true,
+        text: true,       // sleep quality
+        amount: true,     // hours
+        date: true,
+        issue: true,
+        sleepStart: true,
+        sleepEnd: true,
+        createdAt: true
+      }
     });
 
-    // Sort back in ascending order for chart
+    // Format records with all required fields
     const formattedRecords = records
       .map((record) => {
         const jsDate = new Date(record.date);
+        const sleepStart = record.sleepStart ? new Date(record.sleepStart) : null;
+        const sleepEnd = record.sleepEnd ? new Date(record.sleepEnd) : null;
+        
         return {
+          id: record.id,
           date: format(jsDate, "EEE"), // e.g., Mon
           day: format(jsDate, "EEEE"), // e.g., Monday
-          hours: record.amount, // from slider
+          fullDate: format(jsDate, "yyyy-MM-dd"), // for reference
+          hours: record.amount,
+          quality: record.text,
+          issue: record.issue,
+          sleepStart: sleepStart ? format(sleepStart, "HH:mm") : null,
+          sleepEnd: sleepEnd ? format(sleepEnd, "HH:mm") : null,
+          formattedSleepStart: sleepStart ? format(sleepStart, "h:mm a") : null,
+          formattedSleepEnd: sleepEnd ? format(sleepEnd, "h:mm a") : null,
+          createdAt: record.createdAt
         };
       })
       .reverse(); // Oldest to newest for left-to-right chart
@@ -82,7 +110,11 @@ export const getUserSleepRecords = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Internal server error" });
+    res.status(500).json({ 
+      success: false, 
+      message: "Internal server error",
+      error: error.message 
+    });
   }
 };
 

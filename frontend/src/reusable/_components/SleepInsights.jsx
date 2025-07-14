@@ -116,9 +116,9 @@ const SleepInsights = ({ sleepRecords }) => {
                 </Badge>
               </CardTitle>
               <p className="text-sm text-gray-600 mt-1">
-                “Our sleep tracker provides AI-powered insights using intelligent
-                pattern analysis — crafted from real sleep research and best
-                practices.”
+                “Our sleep tracker provides AI-powered insights using
+                intelligent pattern analysis — crafted from real sleep research
+                and best practices.”
               </p>
             </div>
           </div>
@@ -279,13 +279,6 @@ const SleepInsights = ({ sleepRecords }) => {
                   >
                     <Brain className="w-4 h-4 mr-2" />
                     Regenerate
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-green-200 text-green-700 hover:bg-green-50"
-                  >
-                    <Target className="w-4 h-4 mr-2" />
-                    Set Goals
                   </Button>
                 </div>
               </motion.div>

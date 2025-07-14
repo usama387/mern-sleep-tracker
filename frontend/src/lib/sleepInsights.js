@@ -1,97 +1,113 @@
 export function getSleepInsights(records) {
   if (!records || records.length === 0) return "No sleep data available.";
 
-  const hoursArray = records.map((r) => r.hours);
-  const average =
-    hoursArray.reduce((sum, h) => sum + h, 0) / hoursArray.length;
-  const min = Math.min(...hoursArray);
-  const max = Math.max(...hoursArray);
-  const variation = max - min;
-  const hasLowDays = hoursArray.some((h) => h < 4);
-  const oversleptDays = hoursArray.filter((h) => h > 9).length;
-  const undersleptDays = hoursArray.filter((h) => h < 5).length;
+  const averageHours =
+    records.reduce((sum, r) => sum + r.hours, 0) / records.length;
 
-  const lines = [];
+  const poorQualityNights = records.filter((r) => r.quality === "poor");
+  const commonIssues = {};
+  const sleepTimes = [];
+  const wakeTimes = [];
 
-  // 🧠 GENERAL OVERVIEW
-  lines.push("🧠 **Sleep Insights Summary**");
+  records.forEach((r) => {
+    // Track sleep and wake times
+    if (r.sleepStart && r.sleepEnd) {
+      sleepTimes.push(parseTime(r.sleepStart));
+      wakeTimes.push(parseTime(r.sleepEnd));
+    }
 
-  if (average < 6) {
-    lines.push(
-      `• Your **average sleep duration** is critically low (${average.toFixed(
-        1
-      )} hrs). Chronic sleep deprivation can lead to mood disorders, weakened immunity, and cognitive decline.`
-    );
-  } else if (average >= 6 && average < 7) {
-    lines.push(
-      `• Your **average sleep** (${average.toFixed(
-        1
-      )} hrs) is slightly below the recommended range. While it's manageable short-term, consistent improvement is needed.`
-    );
-  } else if (average >= 7 && average <= 9) {
-    lines.push(
-      `• Excellent! Your average sleep (${average.toFixed(
-        1
-      )} hrs) falls within the optimal range for adults. Keep it consistent!`
-    );
-  } else {
-    lines.push(
-      `• You're **sleeping more than usual** (${average.toFixed(
-        1
-      )} hrs). Oversleeping may be linked to fatigue, depression, or poor sleep quality.`
-    );
-  }
+    // Track issues
+    if (r.issue) {
+      commonIssues[r.issue] = (commonIssues[r.issue] || 0) + 1;
+    }
+  });
 
-  // 📉 VARIABILITY
-  if (variation > 3) {
-    lines.push(
-      `• Your sleep hours **fluctuate significantly** (from ${min} to ${max} hrs). Irregular sleep can disrupt your circadian rhythm and reduce sleep efficiency.`
-    );
-  }
+  const avgSleepTime = getAverageTime(sleepTimes);
+  const avgWakeTime = getAverageTime(wakeTimes);
+  const issueSummary = Object.entries(commonIssues)
+    .map(([issue, count]) => `${formatIssue(issue)} (${count} times)`)
+    .join(", ");
 
-  // 🚨 SPECIFIC ISSUES
-  if (hasLowDays) {
-    lines.push(
-      `• Some days had **extremely low sleep (<4 hrs)**. This is a red flag — prioritize earlier wind-down routines or short naps when needed.`
-    );
-  }
+  const sleepTimeWarning = getSleepTimeWarning(avgSleepTime);
+  const wakeTimeWarning = getWakeTimeWarning(avgWakeTime);
 
-  if (oversleptDays >= 2) {
-    lines.push(
-      `• You **overslept on ${oversleptDays} day(s)**. Oversleeping may indicate burnout, poor sleep quality, or inconsistent routines.`
-    );
-  }
+  return `
+🧠 **Sleep Insights Summary**
 
-  if (undersleptDays >= 3) {
-    lines.push(
-      `• You had **${undersleptDays} days with <5 hours of sleep**. Prolonged sleep deprivation can impair decision-making and increase health risks.`
-    );
-  }
+- 💤 Average Sleep Duration: **${averageHours.toFixed(1)} hours**
+- 📉 Nights with Poor Sleep Quality: **${poorQualityNights.length}**
+- ⚠️ Reported Issues: ${issueSummary || "None"}
 
-  // 🧘 LIFESTYLE RECOMMENDATIONS
-  lines.push("\n🧘 **Lifestyle & Routine Suggestions**");
+🕒 **Sleep Timing Patterns**
+- ⏰ Average Sleep Time: **${avgSleepTime}**
+- 🌅 Average Wake-up Time: **${avgWakeTime}**
+${sleepTimeWarning ? `- ❗ ${sleepTimeWarning}` : ""}
+${wakeTimeWarning ? `- ❗ ${wakeTimeWarning}` : ""}
 
-  lines.push(
-    `• **Exercise:** Engage in 20–30 mins of light exercise (walking, yoga) during the day. Avoid heavy workouts within 3 hours of bedtime.`
-  );
-  lines.push(
-    `• **Diet:** Avoid caffeine after 2 PM. Include sleep-friendly foods like almonds, kiwi, bananas, and warm milk. Avoid large meals before sleep.`
-  );
-  lines.push(
-    `• **Digital Detox:** Turn off screens at least 30 minutes before bed. Blue light affects melatonin levels, making it harder to fall asleep.`
-  );
-  lines.push(
-    `• **Routine:** Try to go to bed and wake up at the same time every day — even on weekends. Sleep thrives on regularity.`
-  );
-  lines.push(
-    `• **Environment:** Make your room dark, cool, and quiet. Consider using blackout curtains or white noise apps for deeper sleep.`
-  );
+🩺 **AI Recommendations**
+- Target **7–9 hours** of sleep consistently to restore body and brain functions.
+- Sleep before **11:00 PM** to align with melatonin release and circadian rhythm.
+- Reduce exposure to blue light 1–2 hours before bedtime (phones, laptops).
+- Avoid heavy meals, caffeine, and stimulating activities 2 hours before sleep.
+- Use relaxation techniques like deep breathing, journaling, or light stretching.
 
-  // 💬 MOTIVATION
-  lines.push("\n💬 **Final Note**");
-  lines.push(
-    `Better sleep isn't just about quantity — it's about **consistency**, **quality**, and **routine**. Start small, track daily, and aim for gradual improvement. Your future self will thank you. 💤`
-  );
+🔍 **Root Cause Suggestions**
+- Sleep < 4 hours regularly can lead to **low energy, poor focus, mood swings, and long-term health decline**.
+- Sleeping after 1:00 AM disturbs melatonin cycles, leading to shallow and disrupted sleep.
+- Poor sleep quality may be linked to **stress, poor environment, anxiety, or inconsistent routines**.
 
-  return lines.join("\n\n");
+🌿 **Daily Lifestyle Practices for Better Sleep**
+- 🌞 Get **morning sunlight** for 15–30 mins daily — it helps regulate your sleep-wake clock.
+- 🏃‍♂️ Include light **physical activity** like walking, yoga, or stretches — ideally before 7 PM.
+- 💧 Stay **hydrated**, but reduce water intake 1 hour before bed to avoid waking up at night.
+- 📅 Keep a **consistent routine** — wake and sleep at the same time even on weekends.
+- 📖 Add calming rituals like reading, journaling, or prayer to your pre-sleep routine.
+
+🧬 **Medical & Mental Health Checkups**
+- 🩺 If sleep issues persist (like insomnia, waking up frequently), consult a **sleep specialist**.
+- 🧠 Poor sleep can be a symptom of **anxiety, depression, or hormonal imbalance** — talk to a psychologist if needed.
+- 🧪 Get your **vitamin D, iron, and thyroid levels** checked — deficiencies can impact sleep.
+- ❤️ Consider an annual **wellness exam** to rule out sleep apnea, chronic fatigue, or stress-related conditions.
+
+🌟 **Conclusion**
+Your sleep is not just rest — it's your body's daily **healing mechanism**. Improve it by making small, consistent changes to your **routine, mindset, and health awareness**. Sleep well, live better!
+`;
 }
+
+function parseTime(timeStr) {
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  return hours + minutes / 60;
+}
+
+function formatTime(decimal) {
+  const hours = Math.floor(decimal);
+  const minutes = Math.round((decimal - hours) * 60);
+  return `${pad(hours)}:${pad(minutes)}`;
+}
+
+function pad(num) {
+  return num.toString().padStart(2, "0");
+}
+
+function getAverageTime(times) {
+  if (times.length === 0) return "N/A";
+  const avg = times.reduce((sum, t) => sum + t, 0) / times.length;
+  return formatTime(avg);
+}
+
+function getSleepTimeWarning(avgTime) {
+  const [h] = avgTime.split(":").map(Number);
+  if (h >= 1) return "You’re sleeping too late. Try to sleep before 11:00 PM.";
+  return "";
+}
+
+function getWakeTimeWarning(avgTime) {
+  const [h] = avgTime.split(":").map(Number);
+  if (h >= 9) return "Waking up late may reduce productivity. Try waking up earlier.";
+  return "";
+}
+
+function formatIssue(issue) {
+  return issue.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+}
+

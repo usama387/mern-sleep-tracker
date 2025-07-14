@@ -36,6 +36,8 @@ model Record {
   amount    Float
   date      DateTime @default(now())
   createdAt DateTime @default(now())
+  sleepStart DateTime? // Add this
+  sleepEnd   DateTime? // Add this
   issue     String?
 
   // Foreign key pointing to User

@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -56,7 +55,8 @@ const DashboardPage = () => {
   const [sleepData, setSleepData] = useState({
     quality: "",
     date: undefined,
-    hours: [7],
+    sleepStart: "",
+    sleepEnd: "",
     issue: "",
   });
 
@@ -75,6 +75,8 @@ const DashboardPage = () => {
 
   // Fallback to empty array if no records are available
   const sleepRecords = records?.records || [];
+
+  console.log(sleepRecords);
 
   // Calculate statistics
   const { formattedAverage, bestSleep, worstSleep } = useMemo(() => {
@@ -128,6 +130,25 @@ const DashboardPage = () => {
     }`;
   };
 
+  // Calculate sleep duration from start/end times
+  const calculateDuration = () => {
+    if (!sleepData.sleepStart || !sleepData.sleepEnd) return 0;
+    
+    const [startHours, startMinutes] = sleepData.sleepStart.split(':').map(Number);
+    const [endHours, endMinutes] = sleepData.sleepEnd.split(':').map(Number);
+    
+    let startTotalMinutes = startHours * 60 + startMinutes;
+    let endTotalMinutes = endHours * 60 + endMinutes;
+    
+    // Handle overnight sleep (end time next day)
+    if (endTotalMinutes < startTotalMinutes) {
+      endTotalMinutes += 24 * 60; // Add 24 hours
+    }
+    
+    const totalMinutes = endTotalMinutes - startTotalMinutes;
+    return totalMinutes / 60; // Convert to hours
+  };
+
   const chartConfig = {
     hours: {
       label: "Sleep Hours",
@@ -161,10 +182,28 @@ const DashboardPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Validate inputs
+    if (!sleepData.sleepStart || !sleepData.sleepEnd) {
+      toast.error("Please select both sleep and wake times");
+      setIsSubmitting(false);
+      return;
+    }
+    
+    const hours = calculateDuration();
+    
+    // Validate duration
+    if (hours <= 0 || hours > 24) {
+      toast.error("Invalid sleep duration. Must be between 0 and 24 hours");
+      setIsSubmitting(false);
+      return;
+    }
+
     const payload = {
       quality: sleepData.quality,
       date: sleepData.date ? format(sleepData.date, "yyyy-MM-dd") : null,
-      hours: [sleepData.hours[0]],
+      sleepStart: sleepData.sleepStart,
+      sleepEnd: sleepData.sleepEnd,
+      hours: [hours],
       issue: ["poor", "terrible"].includes(sleepData.quality)
         ? sleepData.issue
         : null,
@@ -187,7 +226,8 @@ const DashboardPage = () => {
       setSleepData({
         quality: "",
         date: undefined,
-        hours: [7],
+        sleepStart: "",
+        sleepEnd: "",
         issue: "",
       });
     }
@@ -222,6 +262,16 @@ const DashboardPage = () => {
     },
   };
 
+  // Format time for display
+  const formatTime = (time) => {
+    if (!time) return "";
+    const [hours, minutes] = time.split(':');
+    const hourNum = parseInt(hours, 10);
+    return `${hourNum % 12 || 12}:${minutes} ${hourNum >= 12 ? 'PM' : 'AM'}`;
+  };
+
+  const sleepDuration = calculateDuration();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50/30">
       {/* Main Content */}
@@ -252,8 +302,7 @@ const DashboardPage = () => {
                     </Avatar>
                     <div className="flex-1">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Welcome Back, {userData.name?.split(" ")[0] || "User"}{" "}
-                        👋
+                        Welcome Back, {userData.name?.split(" ")[0] || "User"} 👋
                       </h1>
                       <p className="text-gray-600 mb-4">
                         Here's a quick overview of your recent sleep activity.
@@ -412,32 +461,47 @@ const DashboardPage = () => {
                       </div>
                     </div>
 
-                    {/* Hours Slept */}
-                    <div className="space-y-4">
-                      <Label className="text-sm font-medium text-gray-700">
-                        Hours Slept
-                      </Label>
+                    {/* Sleep and Wake Times */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div className="space-y-2">
-                        <p className="text-xs text-gray-500">
-                          Select between 0 and 12 hours of sleep
-                        </p>
-                        <Slider
-                          value={sleepData.hours}
-                          onValueChange={(value) =>
-                            handleInputChange("hours", value)
-                          }
-                          max={12}
-                          min={0}
-                          step={0.5}
-                          className="w-full"
+                        <Label className="text-sm font-medium text-gray-700">
+                          Sleep Time
+                        </Label>
+                        <input
+                          type="time"
+                          value={sleepData.sleepStart}
+                          onChange={(e) => handleInputChange("sleepStart", e.target.value)}
+                          className="w-full p-2 border border-green-200 rounded-md focus:ring-green-400 focus:border-green-400"
                         />
-                        <div className="text-center">
-                          <span className="text-lg font-semibold text-green-600">
-                            {sleepData.hours[0]} hours
-                          </span>
-                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Wake Time
+                        </Label>
+                        <input
+                          type="time"
+                          value={sleepData.sleepEnd}
+                          onChange={(e) => handleInputChange("sleepEnd", e.target.value)}
+                          className="w-full p-2 border border-green-200 rounded-md focus:ring-green-400 focus:border-green-400"
+                        />
                       </div>
                     </div>
+
+                    {/* Duration Display */}
+                    {sleepData.sleepStart && sleepData.sleepEnd && (
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600">
+                          Sleep Duration:{" "}
+                          <span className="font-semibold text-green-600">
+                            {formatHours(sleepDuration)}
+                          </span>
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Slept at {formatTime(sleepData.sleepStart)} • 
+                          Woke at {formatTime(sleepData.sleepEnd)}
+                        </p>
+                      </div>
+                    )}
 
                     {/* Submit Button */}
                     <motion.div
